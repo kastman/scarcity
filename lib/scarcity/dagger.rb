@@ -110,27 +110,52 @@ module Scarcity
   end
   
   class DagLog
-    Event = Struct.new :at, :action
-    EVENT_REGEX = /^\d\d\d .\d\d\d\d.\d\d\d.\d\d\d. (\d\d\/\d\d \d\d:\d\d:\d\d) Job (\w*)/
+    # Event = Struct.new :at, :action
+    # EVENT_REGEX = /^\d\d\d .\d\d\d\d.\d\d\d.\d\d\d. (\d\d\/\d\d \d\d:\d\d:\d\d) Job (\w*)/i
+    EVENT_REGEX = /^\d{3} \(.+\) (\d{2}\/\d{2} [\d|:]+) (.*)/i
     RETURN_REGEX = /termination .return value (\d+)/
-    attr_reader :events, :return_value
+    attr_reader :events, :return_value, :filename, :raw_text
     def initialize(filename)
       @events = Array.new
       @return_value = nil
       extract_events_from(filename)
+      @filename = filename
     end
+    
     def extract_events_from(filename)
-      File.readlines(filename).each do |line|
+      @raw_text = File.read(filename)
+      @raw_text.each do |line|
         if matchdata = EVENT_REGEX.match(line)
-          @events << Event.new(DateTime.parse(matchdata[1]), matchdata[2])
+          @events << DagEvent.new(DateTime.parse(matchdata[1]), matchdata[2])
         end
         if matchdata = RETURN_REGEX.match(line)
           @return_value = matchdata[1].to_i
         end
       end if File.exist?(filename)
     end
+    
     def status
       @events.empty? ? nil : @events.sort { |a,b| a.at <=> b.at }.last.action
+    end
+    
+    def duration
+      @events.empty? ? nil : Time.diff(@events.first.at, @events.last.at, "%H %N")[:diff]
+    end
+  end
+  
+  class DagEvent
+    attr_reader :at, :action
+    def initialize(at, action)
+      @at = at
+      @action = action
+    end
+    
+    def to_array
+      ["Date.parse(\"#{@at}\")", image_size].join(", ")
+    end
+    
+    def image_size
+      @action.match(/(\d+)/)[1].to_i
     end
   end
   

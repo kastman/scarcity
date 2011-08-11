@@ -17,7 +17,7 @@ module Scarcity
 
   class SegmentDataset
     
-    attr_reader :directory, :data_id
+    attr_reader :directory, :data_id, :logfile
     
     def initialize(directory)
       @directory = directory
@@ -25,19 +25,23 @@ module Scarcity
       @logfile = "#{@directory}/#{@data_id}.dag.dagman.log"
     end
     
+    def daglog
+      @daglog ||= DagLog.new(@logfile)
+    end
+    
     def status
       stat = :unavailable
       if File.directory?(@directory)
         stat = :provisioned
         if File.exist?(@logfile)
-          stat = DagLog.new(@logfile).status
+          stat = daglog.status
         end
       end
       return stat
     end
     
     def return_value
-      DagLog.new(@logfile).return_value
+      daglog.return_value
     end
     
   end

@@ -3,6 +3,9 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 require 'set'
 require 'fileutils'
+require 'bundler/setup'
+require 'time_diff'
+
 libpath = File.dirname(__FILE__) + '/scarcity'
 require libpath + '/submission'
 require libpath + '/segment'

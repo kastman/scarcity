@@ -10,7 +10,9 @@ begin
     gem.email = "kosmatka@cs.wisc.edu"
     gem.homepage = "http://github.com/kjkosmatka/scarcity"
     gem.authors = ["Kristopher J. Kosmatka"]
-    gem.add_dependency 'sinatra'
+    gem.add_dependency 'sinatra', '~>1.2.6'
+    gem.add_dependency 'rubigen', '~>1.5.6'
+    gem.add_dependency 'time_diff', '~>0.2.1'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 rescue LoadError
@@ -41,8 +43,8 @@ task :test => :check_dependencies
 
 task :default => :test
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
+require 'rdoc/task'
+RDoc::Task.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
