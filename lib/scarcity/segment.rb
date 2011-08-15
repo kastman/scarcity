@@ -24,6 +24,7 @@ module Scarcity
       @data_id = File.basename(directory)
       @logfile = "#{@directory}/#{@data_id}.dag.dagman.log"
       @dag_outfile = "#{@directory}/#{@data_id}.dag.dagman.out"
+      @executible_logfile = "#{@directory}/executibles.log"
     end
     
     def daglog
@@ -32,6 +33,10 @@ module Scarcity
     
     def dag_outlog
       @dag_outlog ||= DagLog.new(@dag_outfile)
+    end
+    
+    def executible_log
+      @executible_log ||= DagLog.new(@executible_logfile)
     end
     
     def status
@@ -43,6 +48,10 @@ module Scarcity
         end
       end
       return stat
+    end
+    
+    def running?
+      daglog.status =~ /executing/ && executible_log.running?
     end
     
     def return_value

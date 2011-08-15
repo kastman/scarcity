@@ -137,11 +137,17 @@ module Scarcity
     end
     
     def status
-      @events.empty? ? nil : @events.sort { |a,b| a.at <=> b.at }.last.action
+      @events.empty? ? nil : @events.sort_by(&:at).last.action
     end
     
     def duration
-      @events.empty? ? nil : Time.diff(@events.first.at, @events.last.at, "%H %N")[:diff]
+      if running?
+        @events.empty? ? nil : Time.diff(@events.first.at, @events.last.at, "%H %N")[:diff]
+      end
+    end
+    
+    def running?
+      @events.size > 1
     end
   end
   
