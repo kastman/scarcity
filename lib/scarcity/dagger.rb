@@ -123,15 +123,17 @@ module Scarcity
     end
     
     def extract_events_from(filename)
-      @raw_text = File.read(filename)
-      @raw_text.each do |line|
-        if matchdata = EVENT_REGEX.match(line)
-          @events << DagEvent.new(DateTime.parse(matchdata[1]), matchdata[2])
+      if File.exist?(filename)
+        @raw_text = File.read(filename) 
+        @raw_text.each do |line|
+          if matchdata = EVENT_REGEX.match(line)
+            @events << DagEvent.new(DateTime.parse(matchdata[1]), matchdata[2])
+          end
+          if matchdata = RETURN_REGEX.match(line)
+            @return_value = matchdata[1].to_i
+          end
         end
-        if matchdata = RETURN_REGEX.match(line)
-          @return_value = matchdata[1].to_i
-        end
-      end if File.exist?(filename)
+      end
     end
     
     def status

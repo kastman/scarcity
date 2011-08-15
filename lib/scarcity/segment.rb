@@ -17,16 +17,21 @@ module Scarcity
 
   class SegmentDataset
     
-    attr_reader :directory, :data_id, :logfile
+    attr_reader :directory, :data_id, :logfile, :dag_outfile
     
     def initialize(directory)
       @directory = directory
       @data_id = File.basename(directory)
       @logfile = "#{@directory}/#{@data_id}.dag.dagman.log"
+      @dag_outfile = "#{@directory}/#{@data_id}.dag.dagman.out"
     end
     
     def daglog
       @daglog ||= DagLog.new(@logfile)
+    end
+    
+    def dag_outlog
+      @dag_outlog ||= DagLog.new(@dag_outfile)
     end
     
     def status
