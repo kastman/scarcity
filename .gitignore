@@ -18,6 +18,8 @@ tmtags
 coverage
 rdoc
 pkg
+*.gem
+Gemfile.lock
 
 ## PROJECT::SPECIFIC
 
