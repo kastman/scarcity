@@ -109,6 +109,12 @@ module Scarcity
     end
   end
   
+  # Class to provide API to condor logfiles.
+  # Useful mainly for parsing logfiles for a job's status in condor
+  # Interesting attributes include running time / duration, current size, and termination status
+  # Different kind of condor logfiles include:
+  # * Executible Logfile: 
+  # * Submit Logfile:
   class DagLog
     # Event = Struct.new :at, :action
     # EVENT_REGEX = /^\d\d\d .\d\d\d\d.\d\d\d.\d\d\d. (\d\d\/\d\d \d\d:\d\d:\d\d) Job (\w*)/i
@@ -151,6 +157,7 @@ module Scarcity
     end
   end
   
+  # A small class for exposing each event in the condor logfile.
   class DagEvent
     attr_reader :at, :action
     def initialize(at, action)

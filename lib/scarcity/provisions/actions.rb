@@ -88,7 +88,7 @@ module Provisions
     def archive
       Dir.chdir(origin) do
         manifest = Dir.glob('*').join(' ')
-        system("tar -czf #{insertion} #{manifest}")
+        system("tar --dereference -czf #{insertion} #{manifest}")
       end
     end
     
